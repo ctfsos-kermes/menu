@@ -357,6 +357,7 @@
         }
 
         function changeTab(category) {
+            if (navigator.vibrate) navigator.vibrate(20);
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             renderMenu(category);
@@ -382,6 +383,7 @@
         }
 
         function copyText(textToCopy, type) {
+            if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const toast = document.getElementById("toast");
                 toast.innerText = type + " kopyalandı! Ödeme ekranınıza yapıştırabilirsiniz.";
@@ -391,6 +393,7 @@
         }
 
         function completeDonation() {
+            if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
             if(cartTotal === 0) {
                 alert("Lütfen önce menüden ürün seçiniz.");
                 return;
