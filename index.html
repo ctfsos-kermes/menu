@@ -8,7 +8,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&family=Playfair+Display:wght@600&family=League+Spartan:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&family=League+Spartan:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* =========================================
@@ -16,14 +16,10 @@
            ========================================= */
         body {
             font-family: 'League Spartan', sans-serif;
-            margin: 0; padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
+            margin: 0; padding: 0; background-color: #f8f9fa;
+            color: #333; overflow-x: hidden; -webkit-tap-highlight-color: transparent;
         }
 
-        /* MBHAR'dan miras: OLED Kumlanma Dokusu */
         .oled-grain {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 99999; opacity: 0.04;
@@ -31,71 +27,62 @@
         }
 
         /* =========================================
-           2. SİNEMATİK AÇILIŞ (SPLASH SCREEN)
+           2. SİNEMATİK AÇILIŞ (MBHAR EDITION)
            ========================================= */
         #splash-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #000000; /* Zifiri Siyah */
-            z-index: 9999;
+            background-color: #000000; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.8s ease;
+            opacity: 1; 
+            /* MBHAR Büyüyerek Kaybolma Geçişi */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
         
-        /* 0.5s: Logo Belirir */
+        /* 0.3s: Logo Belirir */
         .splash-logo-wrapper {
-            position: relative; overflow: hidden;
-            opacity: 0; animation: fadeIn 0.8s ease forwards 0.5s;
-            border-radius: 50%; /* Hüzmenin dışarı taşmaması için */
+            position: relative; overflow: hidden; border-radius: 50%; 
+            opacity: 0; animation: fadeIn 0.8s ease forwards 0.3s;
         }
-        .splash-logo {
-            width: 140px; height: 140px; object-fit: contain; display: block;
-        }
+        .splash-logo { width: 140px; height: 140px; object-fit: contain; display: block; }
         
-        /* 1.8s: SADECE Logonun Üzerinden Geçen Işık Hüzmesi */
+        /* 1.2s: SADECE Logonun Üzerinden Yavaşça Geçen Işık */
         .splash-logo-wrapper::after {
-            content: ''; position: absolute; top: 0; left: -150%; width: 50%; height: 100%;
-            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
-            transform: skewX(-25deg);
-            animation: logoGlare 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 1.8s;
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transform: skewX(-20deg);
+            animation: logoGlare 1.8s ease-in-out forwards 1.2s; /* MBHAR Yavaşlığı */
         }
 
-        /* 1.0s: Ana Başlık Belirir */
+        /* 0.6s: Ana Başlık Belirir (Alt alta ve Metalik Font) */
         .splash-title {
-            font-family: 'Playfair Display', serif;
-            color: #ffffff;
-            font-size: 22px;
-            letter-spacing: 3px;
-            margin: 25px 0 5px 0;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 900;
+            font-size: 26px;
+            letter-spacing: 4px;
+            line-height: 1.4;
+            margin: 30px 0 10px 0;
             text-align: center;
-            opacity: 0; animation: fadeIn 0.8s ease forwards 1.0s;
+            /* MBHAR Metalik Efekti */
+            background: linear-gradient(90deg, #888, #ffffff, #888);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            opacity: 0; animation: fadeIn 0.8s ease forwards 0.6s;
         }
 
-        /* 1.4s: Tarih Belirir */
+        /* 0.9s: Tarih Belirir (Courier New Sadeliği) */
         .splash-date {
-            font-family: 'Montserrat', sans-serif;
-            color: #888888;
-            font-size: 13px;
-            letter-spacing: 5px;
-            margin: 0;
-            opacity: 0; animation: fadeIn 0.8s ease forwards 1.4s;
+            font-family: 'Courier New', monospace;
+            color: #666666; font-size: 14px; letter-spacing: 4px; margin: 0;
+            opacity: 0; animation: fadeIn 0.8s ease forwards 0.9s;
         }
 
         @keyframes fadeIn { to { opacity: 1; } }
-        @keyframes logoGlare { 0% { left: -150%; } 100% { left: 200%; } }
+        @keyframes logoGlare { 0% { left: -100%; } 100% { left: 200%; } }
 
         /* =========================================
            3. ANA ARAYÜZ (APP CONTENT)
            ========================================= */
-        #app-content { 
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-        
-        /* MBHAR'dan miras: Blur Geçiş Sınıfı */
-        .blur-out {
-            filter: blur(8px) brightness(0.8);
-            transform: scale(0.98);
-        }
-
+        #app-content { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .blur-out { filter: blur(8px) brightness(0.8); transform: scale(0.98); }
         .cover-image { width: 100%; display: block; object-fit: cover; }
 
         .tabs {
@@ -114,26 +101,19 @@
             max-width: 600px; margin: 0 auto;
         }
         
-        /* Aşağıdan Süzülme (Scroll Reveal) */
-        .reveal {
-            opacity: 0; transform: translateY(40px);
-            transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.7s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         .product-card {
-            background: white; border-radius: 12px; padding: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.03); text-align: center;
-            display: flex; flex-direction: column; justify-content: space-between;
+            background: white; border-radius: 12px; padding: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            text-align: center; display: flex; flex-direction: column; justify-content: space-between;
         }
         .product-img {
-            width: 100%; aspect-ratio: 1/1; background-color: #e5e7eb;
-            border-radius: 8px; margin-bottom: 10px; display: flex;
-            align-items: center; justify-content: center; color: #9ca3af; font-size: 12px;
-            overflow: hidden;
+            width: 100%; aspect-ratio: 1/1; background-color: #e5e7eb; border-radius: 8px;
+            margin-bottom: 10px; display: flex; align-items: center; justify-content: center;
+            color: #9ca3af; font-size: 12px; overflow: hidden;
         }
         
-        /* Kalp Atışı Mikro-Etkileşimi */
         .product-img img {
             width: 100%; height: 100%; object-fit: cover; border-radius: 8px;
             transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -151,8 +131,7 @@
 
         .cart-section {
             background: white; margin: 20px; padding: 20px; border-radius: 12px;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.05); text-align: center;
-            max-width: 560px; margin-left: auto; margin-right: auto;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05); text-align: center; max-width: 560px; margin: 20px auto;
         }
         .total-text { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #111; }
         
@@ -175,13 +154,11 @@
             cursor: pointer; width: 100%; box-shadow: 0 4px 10px rgba(0, 163, 221, 0.3);
         }
 
-        /* İmza: İtalik değil, baş harfleri büyük, tok görünüm */
         .signature {
             text-align: center; padding: 20px; color: #6b7280; font-size: 15px;
             font-weight: 600; opacity: 0.8; letter-spacing: 0.5px;
         }
 
-        /* Üstten İnen Toast */
         #toast {
             visibility: hidden; min-width: 250px; background-color: #10b981; color: #fff;
             text-align: center; border-radius: 8px; padding: 15px; position: fixed;
@@ -203,7 +180,7 @@
         #thank-you-screen {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(ellipse at bottom, #0d1d31 0%, #0c0d13 100%);
-            z-index: 100; align-items: center; justify-content: center;
+            z-index: 100; flex-direction: column; align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.5s ease;
         }
         .stars {
@@ -224,17 +201,21 @@
             transform: scale(0.8); transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
             position: relative; z-index: 2; overflow: hidden;
         }
-        
         .final-card::after {
             content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
             background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
             transform: skewX(-25deg); animation: none; z-index: 3; pointer-events: none;
         }
         .final-card.scale-up { transform: scale(1); }
-        .final-card.scale-up::after {
-            animation: glareSweep 2.5s ease-in-out forwards; animation-delay: 0.5s;
-        }
+        .final-card.scale-up::after { animation: glareSweep 2.5s ease-in-out forwards; animation-delay: 0.5s; }
         @keyframes glareSweep { 0% { left: -100%; } 100% { left: 200%; } }
+
+        /* YENİ: İndirme Yazısı */
+        .download-hint {
+            margin-top: 25px; color: rgba(255,255,255,0.5); font-family: 'League Spartan', sans-serif;
+            font-size: 14px; letter-spacing: 1px; opacity: 0; transition: opacity 1.5s ease; z-index: 5;
+        }
+        .download-hint.show { opacity: 1; }
     </style>
 </head>
 <body>
@@ -245,7 +226,10 @@
         <div class="splash-logo-wrapper">
             <img src="logo-son.webp" alt="CTFSOS Logo" class="splash-logo">
         </div>
-        <h1 class="splash-title">DOĞU TÜRKİSTAN KERMESİ</h1>
+        <h1 class="splash-title">
+            <span>DOĞU TÜRKİSTAN</span><br>
+            <span>KERMESİ</span>
+        </h1>
         <p class="splash-date">06.05.2026</p>
     </div>
 
@@ -260,8 +244,7 @@
             <button class="tab-btn" onclick="changeTab('diger')">DİĞER ÜRÜNLER</button>
         </div>
 
-        <div class="menu-container" id="menu-container">
-            </div>
+        <div class="menu-container" id="menu-container"></div>
 
         <div class="cart-section">
             <div class="total-text">Toplam Bağış Tutarınız: <span id="total-price">0</span> TL</div>
@@ -287,6 +270,7 @@
         <div class="final-card" id="final-card">
             <img src="kart-son.webp" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" alt="Teşekkür Kartı">
         </div>
+        <div class="download-hint" id="download-hint">Basılı tutarak görseli indirebilirsiniz.</div>
     </div>
 
     <script>
@@ -322,13 +306,14 @@
         let cartTotal = 0;
         let cartCounts = {};
 
-        // Splash Screen Kademeli Senaryo Kontrolü
+        // YENİ: Splash Screen MBHAR Zoom-Out ve Sıfır Bekleme Senaryosu
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
-                splash.style.opacity = '0'; // Siyah ekran erimeye başlar
+                splash.style.opacity = '0';
+                splash.style.transform = 'scale(1.1)'; // MBHAR büyüyerek kaybolma
                 setTimeout(() => { splash.style.display = 'none'; }, 800);
-            }, 3800); // Toplam şov süresi (Logo 0.5s + Başlık 1.0s + Tarih 1.4s + Işık 1.8s)
+            }, 3000); // 1.2s bekleme + 1.8s ışık süresi = tam 3.0 saniyede bitiş, bekleme yok!
         });
 
         function renderMenu(category) {
@@ -387,14 +372,12 @@
             btnElement.innerText = cartCounts[id] + " Eklendi ✓";
             btnElement.classList.add('added');
             
-            // Kalp Atışı Yaylanma Efekti
             const imgContainer = btnElement.closest('.product-card').querySelector('.product-img img');
             if(imgContainer) {
                 imgContainer.style.transform = 'scale(0.85)';
                 setTimeout(() => { imgContainer.style.transform = 'scale(1)'; }, 200);
             }
             
-            // MBHAR'dan miras: Çift vuruşlu (Haptic) Titreşim
             if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
         }
 
@@ -416,16 +399,14 @@
             const appContent = document.getElementById('app-content');
             const flash = document.getElementById('flash-overlay');
             
-            // MBHAR Tarzı Blur (Bulanıklaştırma) Geçişi Başlar
             appContent.classList.add('blur-out');
             
-            // Blur etkisini hissettirmek için 300ms bekleyip Flaşı patlatıyoruz
             setTimeout(() => {
                 flash.style.opacity = '1';
                 
                 setTimeout(() => {
                     appContent.style.display = 'none';
-                    appContent.classList.remove('blur-out'); // Temizlik
+                    appContent.classList.remove('blur-out');
                     
                     const thankYouScreen = document.getElementById('thank-you-screen');
                     thankYouScreen.style.display = 'flex';
@@ -435,10 +416,16 @@
                     
                     setTimeout(() => {
                         document.getElementById('final-card').classList.add('scale-up');
+                        
+                        // YENİ: İndirme Yazısının Usulca Belirmesi
+                        setTimeout(() => {
+                            document.getElementById('download-hint').classList.add('show');
+                        }, 1200); // Kart büyüdükten hemen sonra
+
                     }, 100);
 
-                }, 400); // Flaş patlama süresi
-            }, 300); // Blur'da kalma süresi
+                }, 400); 
+            }, 300); 
         }
 
         window.onload = () => renderMenu('yiyecek');
