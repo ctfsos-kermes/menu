@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doğu Türkistan Kermesi</title>
-    <link rel="icon" href="logo-son.png" type="image/png">
+    <link rel="icon" href="logo-son.webp" type="image/webp">
+    
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -22,13 +23,7 @@
         /* Kapak Afişi Alanı */
         .cover-image {
             width: 100%;
-            height: 200px;
-            background-color: #d1d5db;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-            font-weight: 600;
+            display: block;
             object-fit: cover;
         }
 
@@ -103,16 +98,16 @@
             margin-bottom: 12px;
         }
         
-        /* EKLE Butonu (Daha Ferah ve Büyütülmüş) */
+        /* EKLE Butonu */
         .add-btn {
             background-color: #1e3a8a;
             color: white;
             border: none;
-            padding: 12px 0; /* Boşluk artırıldı */
+            padding: 12px 0;
             border-radius: 6px;
             font-family: inherit;
             font-weight: 600;
-            font-size: 15px; /* Yazı boyutu hafif büyütüldü */
+            font-size: 15px;
             cursor: pointer;
             transition: all 0.2s;
             width: 100%;
@@ -139,13 +134,15 @@
             margin-bottom: 15px;
             color: #111;
         }
+        
+        /* IBAN Kutusu (Puntosu düzeltildi) */
         .iban-box {
             background: #f3f4f6;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 15px;
-            font-size: 16px;
-            letter-spacing: 1px;
+            font-size: 16px; /* Telefondan taşmaması için küçültüldü */
+            letter-spacing: 0.5px;
             font-weight: 600;
         }
         
@@ -156,7 +153,7 @@
             margin-bottom: 15px;
         }
         .copy-btn {
-            flex: 1; /* Butonların eşit genişlikte olmasını sağlar */
+            flex: 1;
             background-color: #4b5563;
             color: white;
             border: none;
@@ -186,31 +183,7 @@
             box-shadow: 0 4px 10px rgba(30,58,138,0.3);
         }
 
-        /* Toast (Bildirim) Mesajı */
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #10b981;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 12px;
-            position: fixed;
-            z-index: 50;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-weight: 600;
-            opacity: 0;
-            transition: opacity 0.3s, bottom 0.3s;
-        }
-        #toast.show {
-            visibility: visible;
-            opacity: 1;
-            bottom: 50px;
-        }
-
-        /* İmza (İyilikle ve umutla tasarlandı) */
+        /* İmza (Senin yaptığın harika italik versiyon) */
         .signature {
             text-align: center;
             padding: 20px;
@@ -221,10 +194,45 @@
             letter-spacing: 0.5px;
         }
 
+        /* --- YENİ: YUKARIDAN İNEN TOAST BİLDİRİMİ (Samsung Çakışma Çözümü) --- */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #10b981;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 15px;
+            position: fixed;
+            z-index: 999;
+            left: 50%;
+            top: -100px; /* Ekranın yukarısında gizli */
+            transform: translateX(-50%);
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+            transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Yaylanarak inme efekti */
+        }
+        #toast.show {
+            visibility: visible;
+            top: 30px; /* Yukarıdan aşağı şıkça iner */
+        }
+
         /* --- SİNEMATİK GEÇİŞ EKRANI (DUA KARTI) --- */
         #app-content {
-            transition: opacity 0.8s ease;
+            transition: opacity 0.5s ease;
         }
+        
+        /* Yeni: Flaş Efekti */
+        #flash-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: white;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-out;
+        }
+
         #thank-you-screen {
             display: none;
             position: fixed;
@@ -234,7 +242,7 @@
             align-items: center;
             justify-content: center;
             opacity: 0;
-            transition: opacity 1s ease;
+            transition: opacity 0.5s ease;
         }
         .stars {
             position: absolute;
@@ -253,32 +261,54 @@
             from { background-position: 0 0; }
             to { background-position: -200px 200px; }
         }
+        
         .final-card {
             width: 85%;
             max-width: 400px;
             aspect-ratio: 9/16;
-            background-color: #fff;
+            background-color: transparent;
             border-radius: 15px;
-            box-shadow: 0 0 40px rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #333;
-            font-weight: bold;
+            box-shadow: 0 0 50px rgba(255,255,255,0.15);
             transform: scale(0.8);
-            transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
             position: relative;
             z-index: 2;
+            overflow: hidden; /* Işık hüzmesinin karttan taşmasını engeller */
         }
+        
+        /* Yeni: Kartın Üzerinden Kayan Işık Hüzmesi (Glare Sweep) */
+        .final-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg); /* Işığı eğik hale getirir */
+            animation: none;
+            z-index: 3;
+            pointer-events: none;
+        }
+        
+        /* Animasyon tetiklendiğinde çalışacak sınıf */
         .final-card.scale-up {
             transform: scale(1);
+        }
+        .final-card.scale-up::after {
+            animation: glareSweep 2.5s ease-in-out forwards;
+            animation-delay: 0.5s; /* Kart büyüdükten hemen sonra ışık geçer */
+        }
+
+        @keyframes glareSweep {
+            0% { left: -100%; }
+            100% { left: 200%; }
         }
     </style>
 </head>
 <body>
 
+    <div id="flash-overlay"></div>
+
     <div id="app-content">
-        <img src="kapak-son.png" class="cover-image" alt="Kermes Afişi">
+        <img src="kapak-son.webp" class="cover-image" alt="Kermes Afişi">
 
         <div class="tabs">
             <button class="tab-btn active" onclick="changeTab('yiyecek')">YİYECEKLER</button>
@@ -293,7 +323,7 @@
             <div class="total-text">Toplam Bağış Tutarınız: <span id="total-price">0</span> TL</div>
             
             <div class="iban-box" id="iban-text">TR54 0000 0000 0000 0000 0000 00</div>
-            <div style="font-weight: bold; margin-bottom: 15px; font-size: 22px;">Melih Baha Harman</div>
+            <div style="font-weight: bold; margin-bottom: 15px; font-size: 20px;">Melih Baha Harman</div>
             
             <div class="copy-buttons-row">
                 <button class="copy-btn" onclick="copyText('TR54 0000 0000 0000 0000 0000 00', 'IBAN')">IBAN Kopyala</button>
@@ -303,7 +333,7 @@
             <button class="complete-btn" onclick="completeDonation()">Bağışımı Tamamladım</button>
         </div>
 
-        <div class="signature">İyilikle ve Umutla Tasarlandı - MBH</div>
+        <div class="signature"><em>İyilikle ve umutla tasarlandı - MBH</em></div>
     </div>
 
     <div id="toast">Kopyalandı! Ödeme ekranınıza yapıştırabilirsiniz.</div>
@@ -311,11 +341,12 @@
     <div id="thank-you-screen">
         <div class="stars"></div>
         <div class="final-card" id="final-card">
-            <img src="kart-son.png" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" alt="Teşekkür Kartı">
+            <img src="kart-son.webp" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" alt="Teşekkür Kartı">
         </div>
     </div>
 
     <script>
+        // Virgül hatası çözülmüş, tertemiz listemiz
         const products = {
             yiyecek: [
                 { id: "y1", name: "Islak Kek", price: 40, img: "" },
@@ -350,9 +381,14 @@
                 let btnText = count > 0 ? count + " Eklendi ✓" : "EKLE";
                 let btnClass = count > 0 ? "add-btn added" : "add-btn";
 
+                // Gerçek fotoğraf veya gri kutu mantığı
+                let imgContent = product.img !== "" 
+                    ? `<img src='${product.img}' style='width:100%; height:100%; object-fit:cover; border-radius:8px;'>` 
+                    : "Kare Fotoğraf";
+
                 const card = `
                     <div class="product-card">
-                        <div class="product-img">Kare Fotoğraf</div>
+                        <div class="product-img">${imgContent}</div>
                         <div>
                             <div class="product-name">${product.name}</div>
                             <div class="product-price">${product.price} TL</div>
@@ -383,35 +419,43 @@
             if (navigator.vibrate) navigator.vibrate(50);
         }
 
-        // Yenilenmiş Dinamik Kopyalama Fonksiyonu
         function copyText(textToCopy, type) {
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const toast = document.getElementById("toast");
-                // Hangi butona basıldıysa ona göre dinamik mesaj:
                 toast.innerText = type + " kopyalandı! Ödeme ekranınıza yapıştırabilirsiniz.";
                 toast.classList.add("show");
                 setTimeout(() => { toast.classList.remove("show"); }, 3000);
             });
         }
 
+        // YENİ: Sinematik Geçiş Efekti (Flaş + Işık Hüzmesi)
         function completeDonation() {
             if(cartTotal === 0) {
                 alert("Lütfen önce menüden ürün seçiniz.");
                 return;
             }
-            document.getElementById('app-content').style.opacity = '0';
+            
+            // 1. Ekranı hızla beyazlat (Flaş)
+            const flash = document.getElementById('flash-overlay');
+            flash.style.opacity = '1';
             
             setTimeout(() => {
+                // 2. Flaşın arkasında asıl siteyi gizle, yıldızlı ekranı hazırla
                 document.getElementById('app-content').style.display = 'none';
+                
                 const thankYouScreen = document.getElementById('thank-you-screen');
                 thankYouScreen.style.display = 'flex';
+                thankYouScreen.style.opacity = '1';
+                
+                // 3. Flaş yavaşça kaybolurken Dua Kartı büyüyerek ekrana gelsin
+                flash.style.opacity = '0';
                 
                 setTimeout(() => {
-                    thankYouScreen.style.opacity = '1';
+                    // Kart büyüsün ve ışık hüzmesi (glareSweep) animasyonu başlasın
                     document.getElementById('final-card').classList.add('scale-up');
                 }, 100);
 
-            }, 800);
+            }, 400); // 0.4 saniye flaş süresi
         }
 
         window.onload = () => renderMenu('yiyecek');
