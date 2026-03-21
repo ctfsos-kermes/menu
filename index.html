@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doğu Türkistan Kermesi</title>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Temel Ayarlar ve Analog Gren Dokusu */
+        body {
+            font-family: 'League Spartan', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Kapak Afişi Alanı */
+        .cover-image {
+            width: 100%;
+            height: 200px;
+            background-color: #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-weight: 600;
+            object-fit: cover;
+        }
+
+        /* Üst Sekmeler (Tablar) */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 15px 0;
+            border: none;
+            background: none;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            color: #9ca3af;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .tab-btn.active {
+            color: #1e3a8a;
+            border-bottom: 3px solid #1e3a8a;
+        }
+
+        /* 2x2 Menü Izgarası (Grid) */
+        .menu-container {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background-color: #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 12px;
+            object-fit: cover;
+        }
+        .product-name {
+            font-weight: 700;
+            font-size: 16px;
+            margin: 5px 0;
+        }
+        .product-price {
+            color: #1e3a8a;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        /* EKLE Butonu (Daha Ferah ve Büyütülmüş) */
+        .add-btn {
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 12px 0; /* Boşluk artırıldı */
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 15px; /* Yazı boyutu hafif büyütüldü */
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .add-btn.added {
+            background-color: #10b981;
+        }
+
+        /* Alt Sepet ve Ödeme Alanı */
+        .cart-section {
+            background: white;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            max-width: 560px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .total-text {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #111;
+        }
+        .iban-box {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        /* Yan Yana Kopyala Butonları */
+        .copy-buttons-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .copy-btn {
+            flex: 1; /* Butonların eşit genişlikte olmasını sağlar */
+            background-color: #4b5563;
+            color: white;
+            border: none;
+            padding: 12px 10px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:active {
+            background-color: #374151;
+        }
+
+        .complete-btn {
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(30,58,138,0.3);
+        }
+
+        /* Toast (Bildirim) Mesajı */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #10b981;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 12px;
+            position: fixed;
+            z-index: 50;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+            bottom: 50px;
+        }
+
+        /* İmza (İyilikle ve umutla tasarlandı) */
+        .signature {
+            text-align: center;
+            padding: 20px;
+            color: #6b7280;
+            font-size: 15px;
+            font-weight: 600;
+            opacity: 0.8;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- SİNEMATİK GEÇİŞ EKRANI (DUA KARTI) --- */
+        #app-content {
+            transition: opacity 0.8s ease;
+        }
+        #thank-you-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(ellipse at bottom, #0d1d31 0%, #0c0d13 100%);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .stars {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: starsMove 10s linear infinite;
+            opacity: 0.5;
+        }
+        @keyframes starsMove {
+            from { background-position: 0 0; }
+            to { background-position: -200px 200px; }
+        }
+        .final-card {
+            width: 85%;
+            max-width: 400px;
+            aspect-ratio: 9/16;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 0 40px rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-weight: bold;
+            transform: scale(0.8);
+            transition: transform 1.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            z-index: 2;
+        }
+        .final-card.scale-up {
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-content">
+        <div class="cover-image">1080x566 Afiş Alanı</div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="changeTab('yiyecek')">YİYECEKLER</button>
+            <button class="tab-btn" onclick="changeTab('icecek')">İÇECEKLER</button>
+            <button class="tab-btn" onclick="changeTab('diger')">DİĞER ÜRÜNLER</button>
+        </div>
+
+        <div class="menu-container" id="menu-container">
+            </div>
+
+        <div class="cart-section">
+            <div class="total-text">Toplam Bağış Tutarınız: <span id="total-price">0</span> TL</div>
+            
+            <div class="iban-box" id="iban-text">TR54 0000 0000 0000 0000 0000 00</div>
+            <div style="font-weight: bold; margin-bottom: 15px; font-size: 22px;">Melih Baha Harman</div>
+            
+            <div class="copy-buttons-row">
+                <button class="copy-btn" onclick="copyText('TR54 0000 0000 0000 0000 0000 00', 'IBAN')">IBAN Kopyala</button>
+                <button class="copy-btn" onclick="copyText('Melih Baha Harman', 'Ad Soyad')">Ad Soyad Kopyala</button>
+            </div>
+
+            <button class="complete-btn" onclick="completeDonation()">Bağışımı Tamamladım</button>
+        </div>
+
+        <div class="signature">İyilikle ve Umutla Tasarlandı - MBH</div>
+    </div>
+
+    <div id="toast">Kopyalandı! Ödeme ekranınıza yapıştırabilirsiniz.</div>
+
+    <div id="thank-you-screen">
+        <div class="stars"></div>
+        <div class="final-card" id="final-card">
+            1080x1920 Dua/Teşekkür Kartı Alanı<br>(İndirmek için basılı tutun)
+        </div>
+    </div>
+
+    <script>
+        const products = {
+            yiyecek: [
+                { id: "y1", name: "Islak Kek", price: 40, img: "" },
+                { id: "y2", name: "Patatesli Poğaça", price: 20, img: "" },
+                { id: "y3", name: "Yaprak Sarma", price: 50, img: "" },
+                { id: "y4", name: "Makarna Salatası", price: 35, img: "" }
+            ],
+            icecek: [
+                { id: "i1", name: "Turanyum Gazozu", price: 25, img: "" },
+                { id: "i2", name: "Limonata", price: 30, img: "" },
+                { id: "i3", name: "Çay", price: 10, img: "" },
+                { id: "i4", name: "Su", price: 5, img: "" }
+            ],
+            diger: [
+                { id: "d1", name: "Mineli Rozet", price: 60, img: "" },
+                { id: "d2", name: "Tıp Sticker Seti", price: 30, img: "" },
+                { id: "d3", name: "Taha Kılınç Kitabı", price: 100, img: "" },
+                { id: "d4", name: "Nöbet Kahvesi", price: 45, img: "" }
+            ]
+        };
+
+        let cartTotal = 0;
+        let cartCounts = {};
+
+        function renderMenu(category) {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+
+            products[category].forEach(product => {
+                let count = cartCounts[product.id] || 0;
+                let btnText = count > 0 ? count + " Eklendi ✓" : "EKLE";
+                let btnClass = count > 0 ? "add-btn added" : "add-btn";
+
+                const card = `
+                    <div class="product-card">
+                        <div class="product-img">Kare Fotoğraf</div>
+                        <div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-price">${product.price} TL</div>
+                            <button class="${btnClass}" onclick="addToCart('${product.id}', ${product.price}, this)">${btnText}</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        }
+
+        function changeTab(category) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderMenu(category);
+        }
+
+        function addToCart(id, price, btnElement) {
+            cartTotal += price;
+            document.getElementById('total-price').innerText = cartTotal;
+
+            if(!cartCounts[id]) cartCounts[id] = 0;
+            cartCounts[id]++;
+
+            btnElement.innerText = cartCounts[id] + " Eklendi ✓";
+            btnElement.classList.add('added');
+            
+            if (navigator.vibrate) navigator.vibrate(50);
+        }
+
+        // Yenilenmiş Dinamik Kopyalama Fonksiyonu
+        function copyText(textToCopy, type) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const toast = document.getElementById("toast");
+                // Hangi butona basıldıysa ona göre dinamik mesaj:
+                toast.innerText = type + " kopyalandı! Ödeme ekranınıza yapıştırabilirsiniz.";
+                toast.classList.add("show");
+                setTimeout(() => { toast.classList.remove("show"); }, 3000);
+            });
+        }
+
+        function completeDonation() {
+            if(cartTotal === 0) {
+                alert("Lütfen önce menüden ürün seçiniz.");
+                return;
+            }
+            document.getElementById('app-content').style.opacity = '0';
+            
+            setTimeout(() => {
+                document.getElementById('app-content').style.display = 'none';
+                const thankYouScreen = document.getElementById('thank-you-screen');
+                thankYouScreen.style.display = 'flex';
+                
+                setTimeout(() => {
+                    thankYouScreen.style.opacity = '1';
+                    document.getElementById('final-card').classList.add('scale-up');
+                }, 100);
+
+            }, 800);
+        }
+
+        window.onload = () => renderMenu('yiyecek');
+    </script>
+</body>
+</html>
