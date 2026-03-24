@@ -48,7 +48,7 @@
     background-color: white; box-sizing: border-box; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 .search-input:focus { outline: none; border-color: #00a3dd; }
-.search-icon { position: absolute; left: 35px; top: 26px; color: #9ca3af; font-size: 16px; }
+.search-icon { position: absolute; left: 35px; top: 25px; width: 18px; height: 18px; }
 .empty-msg { text-align: center; color: #6b7280; font-style: italic; grid-column: 1 / -1; padding: 20px; }
         
         /* 0.3s: Logo Belirir */
@@ -167,12 +167,13 @@
             cursor: pointer; width: 100%; box-shadow: 0 4px 10px rgba(0, 163, 221, 0.3);
         }
         .insta-btn {
-    display: block; width: 90%; max-width: 400px; margin: 0 auto 20px auto;
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-    color: white; text-align: center; padding: 15px; border-radius: 30px;
-    font-weight: 700; text-decoration: none; font-size: 16px;
-    box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3); transition: transform 0.2s;
-}
+            display: block; width: calc(100% - 40px); max-width: 560px; margin: 0 auto 20px auto;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white; text-align: center; padding: 15px 20px; border-radius: 6px;
+            font-family: inherit; font-weight: 700; font-size: 18px; text-decoration: none;
+            box-shadow: 0 4px 10px rgba(220, 39, 67, 0.3); transition: transform 0.2s;
+            box-sizing: border-box;
+        }
 .insta-btn:active { transform: scale(0.95); }
         .signature {
             text-align: center; padding: 20px; color: #6b7280; font-size: 15px;
@@ -271,7 +272,7 @@
             <button class="tab-btn" onclick="changeTab('diger')">DİĞER ÜRÜNLER</button>
         </div>
         <div class="search-container">
-            <span class="search-icon">🔍</span>
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="#00a3dd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             <input type="text" class="search-input" id="searchInput" placeholder="Arama..." oninput="handleSearch(this.value)">
         </div>
         <div class="menu-container" id="menu-container"></div>
@@ -359,18 +360,29 @@
             container.innerHTML = '';
 
             // 1. Arama Filtresi Motoru
-            const filteredProducts = products[category].filter(product => 
-                product.name.toLowerCase().includes(searchTerm)
-            );
+            let targetProducts = [];
+            
+            // Eğer arama çubuğu boşsa, sadece seçili olan kategoriyi (sekme) göster
+            if (searchTerm === '') {
+                targetProducts = products[category];
+            } else {
+                // Arama yapıldıysa TÜM kategorileri bir sepete at ve orada ara
+                const allProducts = [...products.yiyecek, ...products.icecek, ...products.diger];
+                targetProducts = allProducts.filter(product => 
+                    product.name.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // (Bu satırın hemen altında "if (targetProducts.length === 0)" kısmı devam edecek. Artık filteredProducts yerine targetProducts yazdığımız için altındaki kodlarda yer alan 2 adet filteredProducts kelimesini de targetProducts olarak değiştirmen gerekecek.)
 
             // Eğer aranan ürün yoksa mesaj göster
-            if (filteredProducts.length === 0) {
+            if (targetProducts.length === 0) {
                 container.innerHTML = '<div class="empty-msg">Aramanızla eşleşen ürün bulamadık :(</div>';
                 return;
             }
 
             // 2. Filtrelenmiş Ürünleri Ekrana Bas
-            filteredProducts.forEach(product => {
+            targetProducts.forEach(product => {
                 let count = cartCounts[product.id] || 0;
                 let btnText = count > 0 ? count + " Eklendi ✓" : "EKLE";
                 let btnClass = count > 0 ? "add-btn added" : "add-btn";
@@ -381,7 +393,7 @@
 
                 // Ürün eklendiyse Eksi (-) butonunu göster, eklenmediyse gizle
                 let minusButtonHTML = count > 0 
-                    ? `<button class="minus-btn" onclick="removeFromCart('${product.id}', ${product.price})">-</button>` 
+                    ? `<button class="minus-btn" onclick="removeFromCart('${product.id}', ${product.price}, this)">-</button>` 
                     : ``;
 
                 const card = `
@@ -417,6 +429,9 @@
         function changeTab(category) {
             currentCategory = category;
             if (navigator.vibrate) navigator.vibrate(20);
+            // YENİ: Sekme değiştiğinde arama çubuğunu otomatik temizle
+            document.getElementById('searchInput').value = '';
+            searchTerm = '';
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             renderMenu(category);
@@ -441,18 +456,36 @@
             if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
 
             // YENİ: Kalp atışı animasyonu bittikten hemen sonra ekranı yenile (Eksi butonunu çıkar)
-            setTimeout(() => { renderMenu(currentCategory); }, 250);
+            // SADECE basılan butonun yanına Eksi tuşunu canlı olarak ekle (Sayfayı yenileme!)
+            const btnGroup = btnElement.parentElement;
+            if (!btnGroup.querySelector('.minus-btn')) {
+                const minusBtn = document.createElement('button');
+                minusBtn.className = 'minus-btn';
+                minusBtn.innerText = '-';
+                minusBtn.onclick = function() { removeFromCart(id, price, this); };
+                btnGroup.insertBefore(minusBtn, btnElement);
+            }
         }
-        function removeFromCart(id, price) {
-            if (!cartCounts[id] || cartCounts[id] <= 0) return; // Zaten 0 ise hiçbir şey yapma
+        function removeFromCart(id, price, minusBtnElement) {
+            if (!cartCounts[id] || cartCounts[id] <= 0) return; 
             
-            cartCounts[id]--; // Adedi 1 düşür
-            cartTotal -= price; // Toplam fiyattan ürün fiyatını çıkar
+            cartCounts[id]--;
+            cartTotal -= price;
             document.getElementById('total-price').innerText = cartTotal;
             
-            if (navigator.vibrate) navigator.vibrate(20); // Silme işlemi için hafif bir titreşim
-            
-            renderMenu(currentCategory); // Ekranı (Eksi tuşu ve EKLE yazısını) güncelle
+            if (navigator.vibrate) navigator.vibrate(20);
+
+            // Butonları bul ve canlı olarak (sayfa yenilemeden) güncelle
+            const btnGroup = minusBtnElement.parentElement;
+            const addBtnElement = btnGroup.querySelector('.add-btn');
+
+            if (cartCounts[id] === 0) {
+                addBtnElement.innerText = "EKLE";
+                addBtnElement.classList.remove('added');
+                minusBtnElement.remove(); // Sıfırlandıysa Eksi butonunu yok et
+            } else {
+                addBtnElement.innerText = cartCounts[id] + " Eklendi ✓";
+            }
         }
 
         function copyText(textToCopy, type) {
