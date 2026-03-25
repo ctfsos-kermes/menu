@@ -209,15 +209,16 @@
         .total-text { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #111; }
         .heart-wrapper { position: relative; display: inline-flex; align-items: center; }
         .donate-heart { 
-            position: absolute; left: -28px; width: 18px; height: 18px; /* Biraz küçüldü ve yanaştı */
+            position: absolute; top: 50%; left: -28px; width: 18px; height: 18px; /* Biraz küçüldü ve yanaştı */
             animation: heartbeat 2.5s infinite; 
         }
+        /* YENİ: Kalp hem atar hem de dikeyde (Y düzleminde) tam orta hizada kalır */
         @keyframes heartbeat {
-            0%, 100% { transform: scale(1); }
-            10% { transform: scale(1.15); }
-            20% { transform: scale(1); }
-            30% { transform: scale(1.15); }
-            40% { transform: scale(1); }
+            0%, 100% { transform: scale(1) translateY(-50%); } 
+            10% { transform: scale(1.15) translateY(-50%); }
+            20% { transform: scale(1) translateY(-50%); }
+            30% { transform: scale(1.15) translateY(-50%); }
+            40% { transform: scale(1) translateY(-50%); }
         }
         .iban-box {
             background: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 15px;
@@ -371,7 +372,6 @@
 
         <div class="cart-section">
             <div class="iban-box" id="iban-text">TR54 0000 0000 0000 0000 0000 00</div>
-            <div style="font-weight: bold; margin-bottom: 15px; font-size: 20px;">Melih Baha Harman</div>
             <div style="font-weight: bold; margin-bottom: 15px; font-size: 20px;">Melih Baha Harman</div>
             
             <div class="copy-buttons-row">
