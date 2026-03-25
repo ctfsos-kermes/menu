@@ -206,13 +206,9 @@
             border-radius: 12px; padding: 20px; /* SİLİNEN PADDING VE RADIUS GERİ GELDİ */
             text-align: center; max-width: 560px; margin: 20px auto;
         }
-        .total-text { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #111; }
+        .total-text { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #111; }
         .heart-wrapper { position: relative; display: inline-flex; align-items: center; }
-        .donate-heart { 
-            position: absolute; 
-            top: 50%; /* Kalbi yazının tepesinden tam ortaya indirir */
-            margin-top: -9px; /* Kalbin boyu 18px olduğu için, tam yarısı kadar (9px) geri yukarı çeker. Nokta atışı ortalar! */
-            left: -28px; 
+        .donate-heart {  
             width: 18px; 
             height: 18px; 
             animation: heartbeat 2.5s infinite; 
