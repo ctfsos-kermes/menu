@@ -72,7 +72,15 @@
            ========================================= */
         #app-content { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .cover-image { width: 100%; display: block; object-fit: cover; }
-
+        /* YENİ: Sayaç (Odometer) Blur Efekti */
+        .price-animating {
+            filter: blur(2px);
+            transform: scale(1.1);
+            color: #00a3dd; /* Sayı dönerken hafif mavi parlar */
+            transition: transform 0.1s, filter 0.1s, color 0.1s;
+            display: inline-block; /* Büyüme efektinin çalışması için şart */
+        }
+        #total-price { display: inline-block; transition: all 0.2s; }
         /* Roket Efektleri */
         .rocket-shake {
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both infinite;
@@ -188,7 +196,7 @@
         .total-text { font-size: 22px; font-weight: 700; margin-bottom: 15px; color: #111; }
         .heart-wrapper { position: relative; display: inline-flex; align-items: center; }
         .donate-heart { 
-            position: absolute; left: -32px; width: 22px; height: 22px; 
+            position: absolute; left: -28px; width: 18px; height: 18px; /* Biraz küçüldü ve yanaştı */
             animation: heartbeat 2.5s infinite; 
         }
         @keyframes heartbeat {
@@ -395,6 +403,42 @@
         let currentCategory = 'yiyecek';
         let searchTerm = '';
 
+        let animationFrameId = null;
+
+        function animatePrice(endPrice) {
+            const priceEl = document.getElementById('total-price');
+            const startPrice = parseInt(priceEl.innerText) || 0;
+            
+            if (startPrice === endPrice) return;
+
+            priceEl.classList.add('price-animating');
+            
+            const duration = 600; // 0.6 saniyede sayılar akar
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // MBHAR'daki easeOutQuart formülü (Hızlı başlar, yavaşlayarak durur)
+                const eased = 1 - Math.pow(1 - progress, 4); 
+                const currentVal = startPrice + (endPrice - startPrice) * eased;
+                
+                priceEl.innerText = Math.round(currentVal);
+                
+                if (progress < 1) {
+                    animationFrameId = requestAnimationFrame(update);
+                } else {
+                    priceEl.innerText = endPrice;
+                    priceEl.classList.remove('price-animating');
+                    animationFrameId = null;
+                }
+            }
+            
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            animationFrameId = requestAnimationFrame(update);
+        }
+
         function handleSearch(term) {
             searchTerm = term.toLowerCase();
             renderMenu(currentCategory);
@@ -483,7 +527,7 @@
 
         function addToCart(id, price, btnElement) {
             cartTotal += price;
-            document.getElementById('total-price').innerText = cartTotal;
+            animatePrice(cartTotal);
 
             if(!cartCounts[id]) cartCounts[id] = 0;
             cartCounts[id]++;
@@ -511,7 +555,7 @@
             
             cartCounts[id]--;
             cartTotal -= price;
-            document.getElementById('total-price').innerText = cartTotal;
+            animatePrice(cartTotal);
             
             if (navigator.vibrate) navigator.vibrate(20);
 
