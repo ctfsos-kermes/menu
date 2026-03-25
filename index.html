@@ -80,7 +80,7 @@
             transition: transform 0.1s, filter 0.1s, color 0.1s;
             display: inline-block; /* Büyüme efektinin çalışması için şart */
         }
-        #total-price { display: inline-block; transition: all 0.2s; }
+        #total-price { display: inline-block; margin: 0 6px; transition: all 0.2s; }
         /* Roket Efektleri */
         .rocket-shake {
             animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both infinite;
@@ -253,6 +253,20 @@
         }
         #toast.show { visibility: visible; top: 30px; }
 
+        /* YENİ: Haptik İnfaz (Hata) Animasyonları */
+        .error-shake {
+            animation: errorShake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-7px); }
+            40%, 80% { transform: translateX(7px); }
+        }
+        .toast-error {
+            background-color: #ef4444 !important; /* Kan kırmızı hata rengi */
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4) !important;
+        }
+
         /* =========================================
            4. SİNEMATİK FİNAL & DUA KARTI
            ========================================= */
@@ -337,7 +351,7 @@
             <div class="total-text">
                 <span class="heart-wrapper">
                     <svg class="donate-heart" viewBox="0 0 24 24"><path fill="#00a3dd" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                    Toplam Bağış Tutarınız: <span id="total-price">0</span> TL
+                    Toplam Bağış Tutarınız:&nbsp;<span id="total-price">0</span>&nbsp;TL
                 </span>
             </div>
             
@@ -582,13 +596,31 @@
         }
 
         function completeDonation() {
+            // HAPTİK İNFAZ: Sepet Boşsa Şov Başlar
+            if(cartTotal === 0) {
+                if (navigator.vibrate) navigator.vibrate([50, 100, 50]); // Agresif çift titreşim
+                
+                const cartBox = document.querySelector('.cart-section');
+                cartBox.classList.add('error-shake'); // Kutuyu sağa sola sars
+                setTimeout(() => cartBox.classList.remove('error-shake'), 400); // 0.4 sn sonra sarsıntıyı durdur
+
+                const toast = document.getElementById("toast");
+                toast.innerText = "Hiçbir ürün seçmediniz :(";
+                toast.classList.add("toast-error"); // Toast'u kırmızı yap
+                toast.classList.add("show");
+                
+                setTimeout(() => { 
+                    toast.classList.remove("show"); 
+                    // Toast yukarı çıkarken kırmızı rengi sil ki IBAN kopyalamada yeşil çıksın
+                    setTimeout(() => toast.classList.remove("toast-error"), 400); 
+                }, 3000);
+                
+                return; // Roket kalkışını iptal et ve burada dur
+            }
+            
+            // ROKET KALKIŞI BAŞLIYOR (Eğer sepette ürün varsa)
             if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
-            if(cartTotal === 0) { alert("Lütfen önce menüden ürün seçiniz."); return; }
-            
             const appContent = document.getElementById('app-content');
-            const flash = document.getElementById('flash-overlay');
-            
-            appContent.classList.add('rocket-shake');
             
             // 1. Motorlar ateşleniyor (Titreme ve Gerilme)
             appContent.classList.add('rocket-shake');
