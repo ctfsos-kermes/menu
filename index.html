@@ -799,19 +799,23 @@
                 // Top ortada 1 saniye asılı kalıp gerilim yaratır, sonra GÜÇLÜCE PATLAR!
                 setTimeout(() => {
                     if(navigator.vibrate) navigator.vibrate(100); // Patlama Titreşimi
+                    
+                    // KRİTİK ÇÖZÜM: Topun yukarı kaçmasını engellemek için onu tam merkeze çiviliyoruz!
+                    ball.style.top = '50%';
+                    ball.style.marginTop = '-25px'; 
+                    
                     ball.classList.add('ball-exploding'); 
                     
                     // Top tüm ekranı kapladıktan sonra zifiri siyahı kalıcı yap ve yazıları başlat
                     setTimeout(() => {
+                        overlay.style.transition = 'none'; // Alttan gelen eski yavaş kararmayı tamamen iptal et
                         overlay.style.background = '#000'; // Artık her yer sonsuz siyah
                         ball.style.display = 'none'; 
                         
                         startTerminalTyping(); // Matrix başlasın
                     }, 800); 
                     
-                }, 2500); 
-                
-            }, 3500);
+                }, 2500);
         }
         function startTerminalTyping() {
             const terminal = document.getElementById('terminal-container');
