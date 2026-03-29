@@ -79,7 +79,82 @@
         }
         /* Yazının alt boşluğunu sıfırlıyoruz ki cam kutuya tam ortalansın */
         .sticky-total .total-text { margin-bottom: 0; font-size: 20px; }
+
+        /* =========================================
+           6. TERMINAL EKRANI (EASTER EGG)
+           ========================================= */
+        #terminal-container {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 600px;
+            color: white; font-family: 'Courier New', Courier, monospace; /* Hacker fontu */
+            z-index: 10; display: none; opacity: 0; transition: opacity 1.5s;
+        }
+        #terminal-title {
+            text-align: center; letter-spacing: 5px; font-size: 20px;
+            margin-bottom: 20px; padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+        #terminal-text-wrapper {
+            text-align: left; line-height: 1.6; font-size: 14px;
+        }
+        #terminal-text { white-space: pre-wrap; /* Paragraf boşluklarını korur */ }
         
+        /* Yanıp sönen imleç */
+        #terminal-cursor {
+            display: inline-block; width: 10px; font-weight: bold;
+            animation: blinkCursor 0.8s infinite;
+        }
+        @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        /* =========================================
+           5. GİZLİ PROTOKOL (EASTER EGG) CSS
+           ========================================= */
+        #easter-egg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0);
+            backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);
+            z-index: 999999; /* Her şeyin en üstünde */
+            pointer-events: none;
+            display: none;
+            transition: background 3.5s ease-in, backdrop-filter 3.5s ease-in;
+        }
+        .easter-egg-active {
+            background: rgba(0,0,0,0.4) !important; /* Zifiri siyah */
+            backdrop-filter: blur(15px) !important; -webkit-backdrop-filter: blur(15px) !important;
+            pointer-events: auto !important; /* Kullanıcının siteye dokunmasını engeller */
+        }
+        .easter-shake {
+            /* Mevcut roket titremesini süresiz (infinite) olarak kullanıyoruz */
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) infinite; 
+        }
+        /* Zıplayan Top (Kara Delik) Tasarımı */
+        #black-hole-ball {
+            position: absolute; top: -100px; left: 50%; margin-left: -25px;
+            width: 50px; height: 50px; background-color: #000; border-radius: 50%;
+            display: none; box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+        .ball-bouncing {
+            display: block !important;
+            animation: bounceToMiddle 1.8s forwards; /* Sekme süresi */
+        }
+        .ball-exploding {
+            animation: explodeBlackHole 0.8s ease-in forwards; /* Yutma süresi */
+        }
+
+        /* Sekme ve Esneme Animasyonu */
+        @keyframes bounceToMiddle {
+            0% { top: -100px; animation-timing-function: ease-in; }
+            45% { top: 85%; transform: scaleY(1); animation-timing-function: ease-out; }
+            50% { top: 88%; transform: scaleY(0.6) scaleX(1.3); } /* Yere çarpıp yassılaşır */
+            55% { top: 85%; transform: scaleY(1) scaleX(1); animation-timing-function: ease-out; }
+            80% { top: 40%; animation-timing-function: ease-in; } /* Yukarı seker */
+            100% { top: 50%; transform: scaleY(1) scaleX(1); } /* Ekranın ortasında asılı kalır */
+        }
+        /* Kara Deliğin Patlaması */
+        @keyframes explodeBlackHole {
+            0% { transform: scale(1); }
+            100% { transform: scale(150); } /* Büyüyerek zifiri karanlığı getirir */
+        }
         /* =========================================
            3. ANA ARAYÜZ (APP CONTENT)
            ========================================= */
@@ -666,8 +741,122 @@
                 }, 500); // Yok olma süresi
             }, 850); // Titreme süresi 
         }
+    /* =========================================
+           5. GİZLİ PROTOKOL (EASTER EGG TETİKLEYİCİ)
+           ========================================= */
+        let secretClickCount = 0;
+        let secretClickTimer = null;
+
+        const bannerImg = document.querySelector('.cover-image');
+        if (bannerImg) {
+            bannerImg.addEventListener('click', () => {
+                secretClickCount++;
+
+                // Eğer zamanlayıcı varsa sıfırla (peş peşe basıldığını anlamak için)
+                if (secretClickTimer) clearTimeout(secretClickTimer);
+
+                // Kullanıcı 2 saniye içinde 4. tıklamayı yapmazsa sayacı sıfırla
+                secretClickTimer = setTimeout(() => {
+                    secretClickCount = 0;
+                }, 2000);
+
+                // 4. vuruş gerçekleştiğinde şovu başlat
+                if (secretClickCount === 4) {
+                    secretClickCount = 0; // Sayacı sıfırla
+                    clearTimeout(secretClickTimer);
+                    startEasterEggSequence(); 
+                }
+            });
+        }
+
+        function startEasterEggSequence() {
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]); // Kilit açılma hissi
+            
+            const appContent = document.getElementById('app-content');
+            const overlay = document.getElementById('easter-egg-overlay');
+            
+            // 1. Ekranı titret (Kaos başlıyor)
+            appContent.classList.add('easter-shake');
+            
+            // 2. Örtüyü görünür yap ve kararmayı başlat
+            overlay.style.display = 'block';
+            setTimeout(() => {
+                overlay.classList.add('easter-egg-active');
+            }, 50); // CSS transition'ın tetiklenmesi için 50ms nefes payı
+            
+            // 3. 3.5 saniye sonra titremeyi durdur ve topu düşür
+            setTimeout(() => {
+                appContent.classList.remove('easter-shake');
+                
+                const ball = document.getElementById('black-hole-ball');
+                ball.classList.add('ball-bouncing'); // Top düşer, seker ve ortada durur
+                
+                // Top ortada 1 saniye asılı kalıp gerilim yaratır, sonra patlar!
+                setTimeout(() => {
+                    ball.classList.add('ball-exploding');
+                    
+                    // Ekran tamamen zifiri karanlık yutulduktan sonra Terminal aşaması başlayacak
+                    setTimeout(() => {
+                        console.log("Zifiri Karanlık! Terminal yazıları başlayabilir.");
+                        startTerminalTyping();
+                    }, 800); // Patlamanın (zoom) bitme süresi
+                    
+                }, 2800); // 1.8s sekme + 1s havada asılı kalma beklemesi
+                
+            }, 3500);
+        }
+        function startTerminalTyping() {
+            const terminal = document.getElementById('terminal-container');
+            terminal.style.display = 'block';
+            
+            // Kara delik patladıktan sonra Gizli Mesaj başlığı yavaşça belirir
+            setTimeout(() => { terminal.style.opacity = '1'; }, 500);
+
+            const textEl = document.getElementById('terminal-text');
+            
+            // Şifreli Metin (Vigenère)
+            const message = `Ejydj jaalz lhejmq tlxbt amzgo...\n\nLsfy ev hz cb ebaussmsp albkbiumpkpyebu ebkqdl qlymokmlp bjrefsxfyq elsjs, spygolzju mskuokmlp ybumzh hf rdjwfpndbmuzl pf vlfs njy umnuo cms kqnlwupd. Tprslxfyuo wqtpzf kgtlz cb yfymlpzju efuu ehunh tbrulhff cq hblfsq vsmtaustmtpzj kumldjt. Mmsmi pxnpzj hdupdtpz, aptopzj cq zvxvug ilb bjul lftpz.\n\nCb ebumm rqstqtpz eldjuxjrxfyuol, wpkxbyuo hdbzuoh sjgxfuyjz nv ratlkf rmehd vsmtauhpzb nasl pbfmopenhzju, uzpxjnuo cq cpd bymzh sfsqslw cpdjsqspzf byva amtmopz lpknlfjuu cpxfuxfypfueju. Nv wxbarpyy, uhy eh nv fmskunsmttm sbtvug zhebaybr hf ngalx cpd btmdh tjgyfa qutql poju umtql pxnlw evwvupv.\n\nOmapd cbdbsmsh wbkms nqmtutrqo nqdlejuu hbzeblvuq lhfbyml ig tpfffu uhebyxbfmo, zmupd bymmhdjum tlhjtxj zugyqmld evwvfmo nmspb Nlxjo'q el njy pvh qelnjsus tutpz? Ebmzp qelofnuo v kvjq nhwbt wpugzh lbaqo cmlpr, P oqs zqzp tbrwjfxb iumlzepd.\n\nJfumpsju ejmdfzuop opgpvngo cq lldnlejtuap ljfmslf fkqslw cb svgqm hybjm pyfbr amkghbz jjuo naobxelz ulefrwvy qeldjg. Ebnxjjmlsm lhx...`;
+
+            const signature = "\n\n-mbh :)"; // Şifre Anahtarı
+
+            let i = 0;
+            const typingSpeed = 15; // Çok yavaşlatmadan, hacker hızında akacak
+            
+            function typeWriter() {
+                if (i < message.length) {
+                    textEl.textContent += message.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, typingSpeed);
+                } else {
+                    // Ana metin bitti. İmza için nefes kesen sessizlik... (1.5 Saniye bekle)
+                    setTimeout(typeSignature, 1500); 
+                }
+            }
+            
+            let j = 0;
+            function typeSignature() {
+                if (j < signature.length) {
+                    textEl.textContent += signature.charAt(j);
+                    j++;
+                    setTimeout(typeSignature, 100); // İmza daha havalı ve yavaş atılır
+                }
+            }
+
+            // Başlık belirdikten 1.5 saniye sonra harfler dökülmeye başlar
+            setTimeout(typeWriter, 1500);
+        }
 
         window.onload = () => renderMenu('yiyecek');
     </script>
+    <div id="easter-egg-overlay">
+        <div id="black-hole-ball"></div>
+        
+        <div id="terminal-container">
+            <h2 id="terminal-title">GİZLİ MESAJ</h2>
+            <div id="terminal-text-wrapper">
+                <span id="terminal-text"></span><span id="terminal-cursor">_</span>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
