@@ -126,6 +126,15 @@
             background: #10b981 !important; /* Eklendiğinde yine yeşile dönsün ki kafa karışmasın */
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
+
+        .product-desc { 
+            font-size: 13px; 
+            color: #6b7280; /* Zarif, soluk bir gri */
+            margin-top: -2px; 
+            margin-bottom: 8px; 
+            font-weight: 500; 
+            line-height: 1.2; 
+        }
         
         /* =========================================
            5. GİZLİ PROTOKOL (EASTER EGG) CSS
@@ -520,8 +529,8 @@
                 { id: "i6", name: "Avşar Maden Suyu", price: 40, img: "" }
             ],
             diger: [
-                { id: "d1", name: "Büyük Destekçi Paketi", price: 1390, img: "", premium: true },
-                { id: "d2", name: "Doğu Türkistan Seyahatnamesi Kitabı - Taha Kılınç", price: 150, img: "" },
+                { id: "d1", name: "Büyük Destekçi Paketi", desc: "Termos + Kupa Bardak + Tişört + Bez Çanta + Defter", price: 1390, img: "", premium: true },
+                { id: "d2", name: "Doğu Türkistan Seyahatnamesi Kitabı", desc: "Taha Kılınç", price: 150, img: "" },
                 { id: "d3", name: "Kupa Bardak", price: 200, img: "" },
                 { id: "d4", name: "Defter", price: 90, img: "" },
                 { id: "d5", name: "Termos", price: 490, img: "" },
@@ -530,10 +539,10 @@
                 { id: "d8", name: "Bez Çanta", price: 200, img: "" },
                 { id: "d9", name: "Bez Clutch", price: 120, img: "" },
                 { id: "d10", name: "Sticker", price: 15, img: "" },
-                { id: "d11", name: "Çalışma Seti - 3 Defter + 3 Kitap Ayracı", price: 250, img: "" },
-                { id: "d12", name: "Çanta İkilisi Seti - Bez Çanta + Bez Clutch", price: 290, img: "" },
-                { id: "d13", name: "Klasik Kermes Seti - Anahtarlık + Rozet", price: 100, img: "" },
-                { id: "d14", name: "Tarz Seti - Bez Çanta + Rozet", price: 220, img: "" }
+                { id: "d11", name: "Çalışma Seti", desc: "3 Defter + 3 Kitap Ayracı", price: 250, img: "" },
+                { id: "d12", name: "Çanta İkilisi Seti", desc: "Bez Çanta + Bez Clutch", price: 290, img: "" },
+                { id: "d13", name: "Klasik Kermes Seti", desc: "Anahtarlık + Rozet", price: 100, img: "" },
+                { id: "d14", name: "Tarz Seti", desc: "Bez Çanta + Rozet", price: 220, img: "" }
             ]
         };
 
@@ -627,12 +636,14 @@
                 let imgContent = product.img !== ""
                     ? `<img src='${product.img}' loading='lazy' alt='${product.name}'>` 
                     : "Kare Fotoğraf";
+                let descContent = product.desc ? `<div class="product-desc">${product.desc}</div>` : "";
 
                 const card = `
                     <div class="${cardClass}">
                         <div class="product-img">${imgContent}</div>
                         <div>
                             <div class="product-name">${product.name}</div>
+                            ${descContent}
                             <div class="${priceClass}">${product.price} TL</div>
                             <div class="btn-group">
                                 <button class="minus-btn ${minusActiveClass}" onclick="removeFromCart('${product.id}', ${product.price}, this)">-</button>
