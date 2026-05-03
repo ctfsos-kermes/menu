@@ -136,28 +136,28 @@
             line-height: 1.2; 
         }
 
-        /* =========================================
+       /* =========================================
            8. BİLGİLENDİRME NOTU (INFO BOX)
            ========================================= */
         .info-box {
             display: flex;
+            flex-direction: column; /* İkonu üste, yazıyı alta alır */
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             margin-top: 20px;
-            padding: 12px 15px;
-            background: rgba(0, 163, 221, 0.05); /* Çok hafif mavi tonu */
+            padding: 15px;
+            background: rgba(0, 163, 221, 0.05); 
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             border: 1px solid rgba(0, 163, 221, 0.15);
             border-radius: 10px;
-            text-align: left;
+            text-align: center; /* Yazıyı tam ortalar */
         }
 
         .info-icon {
-            flex-shrink: 0;
-            width: 20px;
-            height: 20px;
-            color: #00a3dd; /* Sitemizin ana mavisi */
+            width: 22px;
+            height: 22px;
+            color: #00a3dd; 
         }
 
         .info-text {
@@ -165,6 +165,7 @@
             color: #4b5563;
             line-height: 1.5;
             font-weight: 500;
+            font-style: italic; /* Yazıyı italik yapar */
         }
         /* =========================================
            5. GİZLİ PROTOKOL (EASTER EGG) CSS
@@ -524,7 +525,7 @@
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                 </svg>
                 <div class="info-text">
-                    “Destekleriniz doğrudan İHH İnsani Yardım Vakfı’na bağış olarak ulaştırılacaktır. Bu platform, yalnızca ürünleri ve toplam tutarı kolayca görüntülemeniz için hazırlanmıştır; sipariş, kargo veya teslimat süreci bulunmamaktadır. Katkılarınız ve güzel niyetiniz için gönülden teşekkür ederiz.”
+                    Destekleriniz doğrudan İHH İnsani Yardım Vakfı’na bağış olarak ulaştırılacaktır. Bu platform, yalnızca ürünleri ve toplam tutarı kolayca görüntülemeniz için hazırlanmıştır; sipariş, kargo veya teslimat süreci bulunmamaktadır. Katkılarınız ve güzel niyetiniz için gönülden teşekkür ederiz.
                 </div>
             </div>
         </div>
