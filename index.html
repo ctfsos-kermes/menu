@@ -182,6 +182,10 @@
             cursor: not-allowed !important; /* Fare imlecini yasaklı ikonuna çevirir */
             pointer-events: none !important; /* Mobil ve webde tıklanmayı fiziksel olarak engeller */
         }
+        .sold-out-price {
+            color: #9ca3af !important; /* Premium gri, butonla aynı ton */
+            text-shadow: none !important; /* Eğer varsa parlamayı söndürür */
+        }
         /* =========================================
            5. GİZLİ PROTOKOL (EASTER EGG) CSS
            ========================================= */
@@ -694,7 +698,8 @@
                 let isSoldOut = product.stock === false; // YENİ: Tükendi kontrolü
 
                 let cardClass = isPremium ? "product-card reveal premium-card" : "product-card reveal";
-                let priceClass = isPremium ? "product-price premium-price" : "product-price";
+                // Eğer ürün tükendiyse fiyat sınıfını griye çek, değilse normal/premium kalsın
+                let priceClass = isSoldOut ? "product-price sold-out-price" : (isPremium ? "product-price premium-price" : "product-price");
                 let baseBtnClass = isPremium ? "add-btn premium-btn" : "add-btn";
                 
                 let btnText = "EKLE";
