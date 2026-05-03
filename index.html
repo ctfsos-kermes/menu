@@ -166,6 +166,22 @@
             line-height: 1.5;
             font-weight: 500;
         }
+
+        /* =========================================
+           9. TÜKENDİ (OUT OF STOCK) TASARIMI
+           ========================================= */
+        .sold-out-img img {
+            filter: grayscale(100%); /* Mevcut renkli resmi tamamen siyah-beyaz yapar */
+            opacity: 0.6; /* Ürünü biraz soluklaştırarak pasif olduğunu hissettirir */
+        }
+        
+        .sold-out-btn {
+            background-color: #9ca3af !important; /* Premium metalik gri */
+            color: #ffffff !important;
+            box-shadow: none !important; /* Glow veya gölge efektlerini iptal eder */
+            cursor: not-allowed !important; /* Fare imlecini yasaklı ikonuna çevirir */
+            pointer-events: none !important; /* Mobil ve webde tıklanmayı fiziksel olarak engeller */
+        }
         /* =========================================
            5. GİZLİ PROTOKOL (EASTER EGG) CSS
            ========================================= */
@@ -664,31 +680,47 @@
 
             targetProducts.forEach(product => {
                 let count = cartCounts[product.id] || 0;
-                let btnText = count > 0 ? count + " Eklendi ✓" : "EKLE";
-                let minusActiveClass = count > 0 ? "active" : "";
-
-                // PREMIUM KONTROLÜ
                 let isPremium = product.premium ? true : false;
+                let isSoldOut = product.stock === false; // YENİ: Tükendi kontrolü
+
                 let cardClass = isPremium ? "product-card reveal premium-card" : "product-card reveal";
                 let priceClass = isPremium ? "product-price premium-price" : "product-price";
                 let baseBtnClass = isPremium ? "add-btn premium-btn" : "add-btn";
-                let btnClass = count > 0 ? baseBtnClass + " added" : baseBtnClass;
+                
+                let btnText = "EKLE";
+                let btnClass = baseBtnClass;
+                let minusActiveClass = "";
+                let onClickAttr = `onclick="addToCart('${product.id}', ${product.price}, this)"`; // Varsayılan tıklama emri
 
-                let imgContent = product.img !== ""
+                // Eğer ürün tükendiyse butonu mühürle
+                if (isSoldOut) {
+                    btnText = "TÜKENDİ";
+                    btnClass = "add-btn sold-out-btn"; 
+                    onClickAttr = "disabled"; // Tıklamayı ve fonksiyonu tamamen iptal et
+                } else if (count > 0) {
+                    btnText = count + " Eklendi ✓";
+                    btnClass = baseBtnClass + " added";
+                    minusActiveClass = "active";
+                }
+
+                let imgClass = isSoldOut ? "product-img sold-out-img" : "product-img";
+
+                let imgContent = product.img !== "" 
                     ? `<img src='${product.img}' loading='lazy' alt='${product.name}'>` 
                     : "Kare Fotoğraf";
+
                 let descContent = product.desc ? `<div class="product-desc">${product.desc}</div>` : "";
 
                 const card = `
                     <div class="${cardClass}">
-                        <div class="product-img">${imgContent}</div>
+                        <div class="${imgClass}">${imgContent}</div>
                         <div>
                             <div class="product-name">${product.name}</div>
                             ${descContent}
                             <div class="${priceClass}">${product.price} TL</div>
                             <div class="btn-group">
                                 <button class="minus-btn ${minusActiveClass}" onclick="removeFromCart('${product.id}', ${product.price}, this)">-</button>
-                                <button class="${btnClass}" onclick="addToCart('${product.id}', ${product.price}, this)">${btnText}</button>
+                                <button class="${btnClass}" ${onClickAttr}>${btnText}</button>
                             </div>
                         </div>
                     </div>
