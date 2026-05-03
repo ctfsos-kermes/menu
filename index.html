@@ -373,8 +373,16 @@
             40% { transform: scale(1); }
         }
         .iban-box {
-            background: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 15px;
-            font-size: 16px; letter-spacing: 0.5px; font-weight: 600;
+            background: rgba(0, 163, 221, 0.05); /* Çok hafif, uçuk bir kermes mavisi arka plan */
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 15px;
+            font-size: 16px; 
+            letter-spacing: 0.5px; 
+            font-weight: 600;
+            border: 1px solid rgba(0, 163, 221, 0.4); /* Çerçeveyi belirginleştiren ince mavi hat */
+            box-shadow: 0 0 20px rgba(0, 163, 221, 0.25); /* İşte o efsanevi Mavi Glow efekti */
+            color: #111; /* Okunabilirliği yüksek tutmak için metin koyu renk */
         }
         
         .copy-buttons-row { display: flex; gap: 10px; margin-bottom: 15px; }
