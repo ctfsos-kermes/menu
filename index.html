@@ -105,6 +105,27 @@
             animation: blinkCursor 0.8s infinite;
         }
         @keyframes blinkCursor { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* =========================================
+           7. PREMIUM ÜRÜN (ALTIN PAKET) TASARIMI
+           ========================================= */
+        .premium-card {
+            border: 1px solid rgba(212, 175, 55, 0.6) !important;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.25), inset 0 0 10px rgba(212, 175, 55, 0.05) !important;
+        }
+        .premium-price {
+            color: #d4af37 !important; /* Saf Altın Rengi */
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+        .premium-btn {
+            background: linear-gradient(135deg, #d4af37, #b58500) !important; /* Düz renk değil, elit geçişli altın */
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+            color: white !important;
+        }
+        .premium-btn.added {
+            background: #10b981 !important; /* Eklendiğinde yine yeşile dönsün ki kafa karışmasın */
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
         
         /* =========================================
            5. GİZLİ PROTOKOL (EASTER EGG) CSS
@@ -451,7 +472,7 @@
             <div style="font-weight: bold; margin-bottom: 15px; font-size: 20px;">Melih Baha Harman</div>
             
             <div class="copy-buttons-row">
-                <button class="copy-btn" onclick="copyText('TR54 0000 0000 0000 0000 0000 00', 'IBAN')">IBAN Kopyala</button>
+                <button class="copy-btn" onclick="copyText('TR86 0020 5000 0994 1259 2000 03', 'IBAN')">IBAN Kopyala</button>
                 <button class="copy-btn" onclick="copyText('Melih Baha Harman', 'Ad Soyad')">Ad Soyad Kopyala</button>
             </div>
 
@@ -492,15 +513,27 @@
             ],
             icecek: [
                 { id: "i1", name: "Turanyum Gazozu", price: 35, img: "" },
-                { id: "i2", name: "Limonata", price: 30, img: "" },
-                { id: "i3", name: "Çay", price: 15, img: "" },
-                { id: "i4", name: "Su", price: 10, img: "" }
+                { id: "i2", name: "Çay", price: 20, img: "" },
+                { id: "i3", name: "Filtre Kahve", price: 50, img: "" },
+                { id: "i4", name: "Sade Maden Suyu", price: 15, img: "" },
+                { id: "i5", name: "Limonata", price: 40, img: "" },
+                { id: "i6", name: "Avşar Maden Suyu", price: 40, img: "" }
             ],
             diger: [
-                { id: "d1", name: "Kupa Bardak", price: 60, img: "" },
-                { id: "d2", name: "Sticker Seti", price: 30, img: "" },
-                { id: "d3", name: "Doğu Türkistan Seyahatnamesi Kitabı - Taha Kılınç", price: 250, img: "" },
-                { id: "d4", name: "Baskılı Bez Torba", price: 45, img: "" }
+                { id: "d1", name: "Büyük Destekçi Paketi", price: 1390, img: "", premium: true },
+                { id: "d2", name: "Doğu Türkistan Seyahatnamesi Kitabı - Taha Kılınç", price: 150, img: "" },
+                { id: "d3", name: "Kupa Bardak", price: 200, img: "" },
+                { id: "d4", name: "Defter", price: 90, img: "" },
+                { id: "d5", name: "Termos", price: 490, img: "" },
+                { id: "d6", name: "Tişört", price: 490, img: "" },
+                { id: "d7", name: "Anahtarlık", price: 80, img: "" },
+                { id: "d8", name: "Bez Çanta", price: 200, img: "" },
+                { id: "d9", name: "Bez Clutch", price: 120, img: "" },
+                { id: "d10", name: "Sticker", price: 15, img: "" },
+                { id: "d11", name: "Çalışma Seti - 3 Defter + 3 Kitap Ayracı", price: 250, img: "" },
+                { id: "d12", name: "Çanta İkilisi Seti - Bez Çanta + Bez Clutch", price: 290, img: "" },
+                { id: "d13", name: "Klasik Kermes Seti - Anahtarlık + Rozet", price: 100, img: "" },
+                { id: "d14", name: "Tarz Seti - Bez Çanta + Rozet", price: 220, img: "" }
             ]
         };
 
@@ -582,19 +615,25 @@
             targetProducts.forEach(product => {
                 let count = cartCounts[product.id] || 0;
                 let btnText = count > 0 ? count + " Eklendi ✓" : "EKLE";
-                let btnClass = count > 0 ? "add-btn added" : "add-btn";
                 let minusActiveClass = count > 0 ? "active" : "";
 
-                let imgContent = product.img !== "" 
-                    ? `<img src='${product.img}' alt='${product.name}'>` 
+                // PREMIUM KONTROLÜ
+                let isPremium = product.premium ? true : false;
+                let cardClass = isPremium ? "product-card reveal premium-card" : "product-card reveal";
+                let priceClass = isPremium ? "product-price premium-price" : "product-price";
+                let baseBtnClass = isPremium ? "add-btn premium-btn" : "add-btn";
+                let btnClass = count > 0 ? baseBtnClass + " added" : baseBtnClass;
+
+                let imgContent = product.img !== ""
+                    ? `<img src='${product.img}' loading='lazy' alt='${product.name}'>` 
                     : "Kare Fotoğraf";
 
                 const card = `
-                    <div class="product-card reveal">
+                    <div class="${cardClass}">
                         <div class="product-img">${imgContent}</div>
                         <div>
                             <div class="product-name">${product.name}</div>
-                            <div class="product-price">${product.price} TL</div>
+                            <div class="${priceClass}">${product.price} TL</div>
                             <div class="btn-group">
                                 <button class="minus-btn ${minusActiveClass}" onclick="removeFromCart('${product.id}', ${product.price}, this)">-</button>
                                 <button class="${btnClass}" onclick="addToCart('${product.id}', ${product.price}, this)">${btnText}</button>
