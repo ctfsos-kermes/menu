@@ -211,6 +211,7 @@
         .carousel-slide {
             flex: 0 0 100%;
             scroll-snap-align: center;
+            scroll-snap-stop: always;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -564,7 +565,7 @@
     <div id="flash-overlay"></div>
 
     <div id="app-content">
-        <img src="kapak-son.webp" class="cover-image" alt="Kermes Afişi">
+        <img src="ft-kapak.webp" class="cover-image" alt="Kermes Afişi">
 
         <div class="tabs">
             <button class="tab-btn active" onclick="changeTab('yiyecek')">YİYECEKLER</button>
@@ -621,7 +622,7 @@
     <div id="thank-you-screen">
         <div class="stars"></div>
         <div class="final-card" id="final-card">
-            <img src="kart-son.webp" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" alt="Teşekkür Kartı">
+            <img src="ft-kart.webp" style="width: 100%; height: 100%; object-fit: cover; border-radius: 15px;" alt="Teşekkür Kartı">
         </div>
         <div class="download-hint" id="download-hint">Basılı tutarak görseli indirebilirsiniz.</div>
     </div>
@@ -654,13 +655,13 @@
                 { id: "d1", name: "Büyük Destekçi Paketi", desc: "Termos + Kupa Bardak + Tişört + Bez Çanta + Defter", price: 1390, img: "f-bdp.webp", premium: true },
                 { id: "d2", name: "Doğu Türkistan Seyahatnamesi Kitabı", desc: "Taha Kılınç", price: 150, img: "f-kitap.webp" },
                 { id: "d3", name: "Kupa Bardak", price: 200, img: ["f-1-kupa.webp", "f-2-kupa.webp", "f-3-kupa.webp", "f-4-kupa.webp", "f-5-kupa.webp", "f-6-kupa.webp", "f-7-kupa.webp"] },
-                { id: "d4", name: "Defter", price: 90, img: ["f-1-defter.webp", "f-2-defter.webp", "f-3-defter.webp", "f-4-defter.webp", "f-5-defter.webp", "f-6-defter.webp"] },
+                { id: "d4", name: "Defter", price: 90, img: ["f-2-defter.webp", "f-6-defter.webp", "f-3-defter.webp", "f-5-defter.webp", "f-4-defter.webp", "f-1-defter.webp"] },
                 { id: "d5", name: "Termos", price: 490, img: "f-termos.webp" },
                 { id: "d6", name: "Tişört", price: 490, img: "f-tisort.webp" },
                 { id: "d7", name: "Anahtarlık", price: 80, img: "f-anahtarlik.webp" },
                 { id: "d8", name: "Bez Çanta", price: 180, img: ["f-1-canta.webp", "f-2-canta.webp"] },
                 { id: "d9", name: "Bez Clutch", price: 150, img: "f-clutch.webp" },
-                { id: "d10", name: "Sticker", price: 15, img: "f-sticker.webp" },
+                { id: "d10", name: "Sticker", price: 30, img: "f-sticker.webp" },
                 { id: "d11", name: "Çalışma Seti", desc: "3 Defter + 3 Kitap Ayracı", price: 250, img: "f-cs.webp" },
                 { id: "d12", name: "Çanta İkilisi Seti", desc: "Bez Çanta + Bez Clutch", price: 300, img: "f-cis.webp" },
                 { id: "d13", name: "Klasik Kermes Seti", desc: "Anahtarlık + Rozet", price: 100, img: "" },
