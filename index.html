@@ -186,6 +186,58 @@
             color: #9ca3af !important; /* Premium gri, butonla aynı ton */
             text-shadow: none !important; /* Eğer varsa parlamayı söndürür */
         }
+
+        /* =========================================
+           10. KAYDIRMALI FOTOĞRAF (CAROUSEL)
+           ========================================= */
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: inherit; /* Kartın yuvarlak hatlarına uyar */
+        }
+        .carousel-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Firefox için barı gizler */
+            -ms-overflow-style: none; /* IE için barı gizler */
+            height: 100%;
+        }
+        .carousel-container::-webkit-scrollbar {
+            display: none; /* Chrome/Safari için barı gizler */
+        }
+        .carousel-slide {
+            flex: 0 0 100%;
+            scroll-snap-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            z-index: 2;
+        }
+        .carousel-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3); /* Beyaz fotolarda da görünsün diye hafif gölge */
+            transition: all 0.3s ease;
+        }
+        .carousel-dot.active {
+            background: #ffffff;
+            transform: scale(1.3);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
         /* =========================================
            5. GİZLİ PROTOKOL (EASTER EGG) CSS
            ========================================= */
@@ -617,6 +669,19 @@
             ]
         };
 
+        // Carousel kaydırıldıkça minik noktaları güncelleyen fonksiyon
+        function updateDots(container) {
+            // Hangi fotoğrafta olduğumuzu hesapla
+            let index = Math.round(container.scrollLeft / container.clientWidth);
+            // O ürünün altındaki noktaları bul
+            let dots = container.nextElementSibling.querySelectorAll('.carousel-dot');
+            
+            // Tüm noktaları gez, sadece aktif olana ışık ver
+            dots.forEach((dot, i) => {
+                if (i === index) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
         let cartTotal = 0;
         let cartCounts = {};
         let currentCategory = 'yiyecek';
@@ -720,9 +785,35 @@
 
                 let imgClass = isSoldOut ? "product-img sold-out-img" : "product-img";
 
-                let imgContent = product.img !== "" 
-                    ? `<img src='${product.img}' loading='lazy' alt='${product.name}'>` 
-                    : "Kare Fotoğraf";
+                let imgContent = "";
+                // Eğer fotoğraf kısmı bir listeyse (array) ve birden fazla foto varsa:
+                if (Array.isArray(product.img) && product.img.length > 1) {
+                    let slides = product.img.map((src, index) => 
+                        `<div class="carousel-slide"><img src='${src}' loading='lazy' alt='${product.name} ${index+1}'></div>`
+                    ).join('');
+                    
+                    let dots = product.img.map((_, index) => 
+                        `<div class="carousel-dot ${index === 0 ? 'active' : ''}"></div>`
+                    ).join('');
+
+                    imgContent = `
+                        <div class="carousel-wrapper">
+                            <div class="carousel-container" onscroll="updateDots(this)">
+                                ${slides}
+                            </div>
+                            <div class="carousel-dots">
+                                ${dots}
+                            </div>
+                        </div>
+                    `;
+                } 
+                // Eğer tek bir fotoğraf varsa veya liste içinde tek foto kalmışsa:
+                else {
+                    let singleImg = Array.isArray(product.img) ? product.img[0] : product.img;
+                    imgContent = singleImg && singleImg !== "" 
+                        ? `<img src='${singleImg}' loading='lazy' alt='${product.name}'>` 
+                        : "Kare Fotoğraf";
+                }
 
                 let descContent = product.desc ? `<div class="product-desc">${product.desc}</div>` : "";
 
